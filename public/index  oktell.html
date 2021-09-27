@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>crm.simpatik.com.ua</title>
+    <meta http-equiv="content-language" content="ru"><meta name="robots" content="all"><meta name="document-state" content="dynamic"><meta name="revisit-after" content="1 day"><meta name="resourse-type" content="document"><meta name="copyright" content="OOO «Телефонные Системы»"><meta name="verify-reformal" content="291d04502a4b1aed67913f0b"><meta name="keywords" content="call-центр, call-center, контакт-центр, contact-центр, телефонные системы, оборудование call-центра, Oktell, АТС-программа, IP-ATC, IP-PBX, IP-АТС, IP ATC, IP АТС, Contact-center, Contact-центр, контакт-центр, контакт центр, Call-center, Call-центр, call center, Call центр, коллцентр, колцентр, колл центр"><meta name="description" content="Компания «Телефонные Системы» — один из ведущих российских разработчиков систем автоматизации телефонного обслуживания. Основной программный продукт — коммуникационная платформа Oktell — многофункциональное программное решение для организации Call-центров, IP-АТС, клиентских сервисов. Важными принципами развития компании выступают технологичность, функциональность и ориентированность на достижение результата."><link rel="stylesheet" type="text/css" href="./Oktell.js_files/typography.css">
+<script type="text/javascript" async="" src="./Oktell.js_files/ga.js"></script><script type="text/javascript" language="javascript" src="./Oktell.js_files/sh__main.js"></script>
+
+<div class="l_body">
+	<div class="l_content"><div class="l_content_fix">
+<div class="l_box g_padding_none">
+ <div class="h_padding h_gray_bg g_border_bottomtop">
+
+ <div class="l_column_group" style="padding-top: 40px; padding-bottom: 20px;">
+
+			<div class="l_column l_w50"><div class="h_padding_right_half">
+ <form action="" class="h_form_vertical">
+ <div class="b_control_group">
+ <label class="i_control_label" for="oktell_ip">IP-адрес сервера Oktell</label>
+ <div class="h_form_padding"><input id="oktell_ip" type="text" placeholder="192.168.0.1" value="91.205.17.235:4055"></div>
+ <small>можно указать внешний или локальный адрес сервера</small>
+ </div>
+ <div class="b_control_group">
+ <label class="i_control_label" for="oktell_login">Логин пользователя Oktell</label>
+ <div class="h_form_padding"><input id="oktell_login" type="text" value="LiubimovVladimir"></div>
+ </div>
+ <div class="b_control_group">
+ <label class="i_control_label" for="oktell_pass">Пароль пользователя Oktell</label>
+ <div class="h_form_padding"><input id="oktell_pass" type="password" value="85596"></div>
+ </div>
+ <div class="b_control_group">
+ <label class="i_control_label" for="oktell_number">Номер телефона для звонка</label>
+ <div class="h_form_padding"><input id="oktell_number" type="text" value="0503612699"></div>
+ </div>
+ <a style="margin-top: 20px;" href="javascript:void(0)" class="g_button m_big m_button_green" id="connect">Соединиться</a>&nbsp;&nbsp;<big>и</big>&nbsp;&nbsp;
+ <a style="margin-top: 20px;" href="javascript:void(0)" class="g_button m_big m_button_green" id="call">Позвонить</a>
+ </form>
+ </div></div>
+ <div class="l_column l_w50"><div class="h_padding_left_half">
+ <div class="m_log_list">
+ <label style="display: block; margin-left: -8px; padding-bottom: 8px;">Лог событий</label>
+ <textarea class="b_log_list" id="oktell_log" readonly=""></textarea>
+ </div>
+ </div></div>
+ </div>
+ </div>
+</div>
+
+<script src="./Oktell.js_files/oktell-1.5.3.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+
+		var l = $('#oktell_log');
+		var log = function(msg){ l.append(msg+"\n") };
+
+        // подсветка синтаксиса
+        //$("pre").each(function(i, e) {hljs.highlightBlock(e)});
+		sh_highlightDocument();
+
+		$('#connect').click(function(){
+			oktell.connect({
+				debugMode: true,
+				url: $('#oktell_ip').val(),
+				login: $('#oktell_login').val(),
+				password: $('#oktell_pass').val(),
+				webSocketSwfLocation: '/data/WebSocketMain.swf',
+				callback: function(data){
+					if ( data.result ) {
+						log("SUCCESS CONNECT");
+					} else {
+						log( "ERROR " + data.errorCode + ": " + data.errorMessage );
+					}
+				}
+			});
+		});
+
+		$('#call').click(function(){
+			var number = $('#oktell_number').val();
+			oktell.call( number, function(data){
+				if ( data.result ) {
+					log( "SUCCESS calling to " + number );
+				} else {
+					log( "ERROR " + data.errorCode + ": " + data.errorMessage );
+				}
+			});
+		});
+
+		oktell.on('talkStart',function(abonents){
+			log('TALKSTART with ' + abonents[0].phoneFormatted );
+		});
+
+		oktell.on('disconnect', function(data){
+			log("DISCONNECTED");
+		});
+
+	});
+
+
+</script>
+
+
+	</div></div>
+
+</div>
